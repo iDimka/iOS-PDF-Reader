@@ -222,7 +222,8 @@ public final class PDFViewController: UIViewController {
     
     /// Presents activity sheet to share or open PDF in another app
     private func presentActivitySheet() {
-        let controller = UIActivityViewController(activityItems: [document.fileData], applicationActivities: nil)
+        let item: Any = document.fileURL ?? document.fileData
+        let controller = UIActivityViewController(activityItems: [item], applicationActivities: nil)
         controller.popoverPresentationController?.barButtonItem = actionButton
         present(controller, animated: true, completion: nil)
     }
