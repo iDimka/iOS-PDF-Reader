@@ -302,7 +302,7 @@ extension PDFViewController: UIScrollViewDelegate {
             updatedPageIndex = Int(round(max(scrollView.contentOffset.x, 0) / scrollView.bounds.width))
         }
         
-        if updatedPageIndex != currentPageIndex {
+        if updatedPageIndex != currentPageIndex && updatedPageIndex < document.pageCount {
             currentPageIndex = updatedPageIndex
             thumbnailCollectionController?.currentPageIndex = currentPageIndex
         }
