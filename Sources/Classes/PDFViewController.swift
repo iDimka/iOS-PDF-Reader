@@ -21,12 +21,13 @@ extension PDFViewController {
     /// - parameter shouldUseToolbar:    if true, action button shown in UIToolBar at the bottom of scree
     ///
     /// - returns: a `PDFViewController`
-    public class func createNew(with document: PDFDocument, title: String? = nil, actionButtonImage: UIImage? = nil, actionStyle: ActionStyle = .print, backButton: UIBarButtonItem? = nil, isThumbnailsEnabled: Bool = true, startPageIndex: Int = 0, shouldUseToolbar: Bool = false) -> PDFViewController {
+    public class func createNew(with document: PDFDocument, title: String? = nil, actionButtonImage: UIImage? = nil, actionStyle: ActionStyle = .print, backButton: UIBarButtonItem? = nil, isThumbnailsEnabled: Bool = true, startPageIndex: Int = 0, shouldUseToolbar: Bool = false, shouldHideNavigationBarByTap: Bool = true) -> PDFViewController {
         let storyboard = UIStoryboard(name: "PDFReader", bundle: Bundle(for: PDFViewController.self))
         let controller = storyboard.instantiateInitialViewController() as! PDFViewController
         controller.document = document
         controller.actionStyle = actionStyle
         controller.shouldUseToolbar = shouldUseToolbar
+        controller.shouldHideNavigationBarByTap = shouldHideNavigationBarByTap
         
         if let title = title {
             controller.title = title
@@ -77,6 +78,9 @@ public final class PDFViewController: UIViewController {
     
     /// Width of the thumbnail bar (used to resize on rotation events)
     @IBOutlet private var thumbnailCollectionControllerWidth: NSLayoutConstraint!
+    
+    /// Hide UINavigationBar by signle tap
+    fileprivate var shouldHideNavigationBarByTap: Bool = true
     
     /// PDF document that should be displayed
     fileprivate var document: PDFDocument!
@@ -275,7 +279,8 @@ extension PDFViewController: PDFPageCollectionViewCellDelegate {
     
     func handleSingleTap(_ cell: PDFPageCollectionViewCell, pdfPageView: PDFPageView) {
         var shouldHide: Bool {
-            guard let isNavigationBarHidden = navigationController?.isNavigationBarHidden else {
+            guard let isNavigationBarHidden = navigationController?.isNavigationBarHidden,
+                shouldHideNavigationBarByTap == true else {
                 return false
             }
             return !isNavigationBarHidden
